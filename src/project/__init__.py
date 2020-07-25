@@ -1,15 +1,18 @@
-from flask import Flask
+import marshmallow
+from flask import Flask, jsonify
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_cors import CORS
 from project.configs import Config
+from flask_marshmallow import Marshmallow
 
 
 
 db = SQLAlchemy()#variable base de datos
 migrate = Migrate()#migrate para generar onjetos en la db
 bcrypt = Bcrypt()
+ma = Marshmallow()
 
 def register_blueprints(app):
     from project.endpoints import blueprint as usuarios

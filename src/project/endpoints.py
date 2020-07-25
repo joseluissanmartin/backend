@@ -3,13 +3,35 @@ from flask import request, jsonify, Blueprint, current_app
 import  json
 import datetime
 import jwt
+import marshmallow
+from functools import wraps
 from project.models import Usuario
-from project import db
-from flask_bcrypt import Bcrypt
+from project import db, bcrypt
+from project.schemas import usuario_schema
 
-bcrypt = Bcrypt()
+
 
 blueprint = Blueprint("usuarios", __name__)#para generar las rutas
+
+def check_token():
+    authorization = request.headers.get('Authorization')
+
+    if authorization is None:
+        return False
+
+    partes = authorization.split(' ')
+    if len(partes) != 2:
+        return False
+
+    if partes[0] != 'Bearer':
+        return False
+
+    token = partes[1]
+
+    try:
+        return jwt.decode(token, current_app.config['SECRET'])
+    except:
+        return False
 
 
 def usuario_a_dict(usuario):#el diccionario
@@ -57,7 +79,7 @@ def index():
 
 
 @blueprint.route("/inicio", methods=["GET", "POST"])
-def login():
+def inicio():
 
     datos = request.get_json()
 
@@ -86,7 +108,6 @@ def register():
     nombre = datos["nombre"]
     password = datos["password"]
     email = datos["email"]
-    fecha = datos["fecha"]
 
     usuario = Usuario(**datos)
 
@@ -115,7 +136,6 @@ def view(id):
                 "id": usuario.id,
                 "nombre": usuario.nombre,
                 "email": usuario.email,
-                "fecha": usuario.fecha
             })
     return jsonify(respuesta), 200
 
@@ -162,3 +182,30 @@ def patch_gusto(id):
     db.session.commit()
 
     return usuario_a_dict(usuario), 200
+
+
+@blueprint.route('/login', methods=['GET', 'POST'])
+def login():
+    datos = request.get_json()
+
+    email = datos['email']
+    password = datos['password']
+
+    usuario = Usuario.query.filter_by(email=email).first()
+
+    if usuario is None:
+        return 'Not found', 404
+
+    if bcrypt.check_password_hash(usuario.password, password) is False:
+        return 'Not found', 404
+
+    payload = {
+        'sub': usuario.id,
+        'name': usuario.nombre,
+        'iat': datetime.datetime.now()
+    }
+
+    return jwt.encode(
+        payload,
+        current_app.config['SECRET'],
+        algorithm='HS256')
