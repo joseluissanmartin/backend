@@ -17,6 +17,7 @@ def usuario_a_dict(usuario):#el diccionario
     "id": usuario.id,
     "nombre": usuario.nombre,
     "email": usuario.email,
+    "password": usuario.password,
     "fecha": usuario.fecha,
     "sistema_o": usuario.sistema_o,
     "procesador": usuario.procesador,
