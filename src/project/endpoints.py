@@ -50,7 +50,7 @@ def check_token(): #autorizador
 
 
 
-@blueprint.route("/inicio")#rutas
+#@blueprint.route("/inicio")#rutas
 def index():
     return "<h1>Hola</h1>"
 
@@ -60,7 +60,7 @@ def login():
 
     datos = request.get_json()
 
-    correo =datos["email"]
+    email =datos["email"]
     password = datos["password"]
 
     usuario = Usuario.query.filter_by(email = email).first()
@@ -84,7 +84,7 @@ def register():
 
     nombre = datos["nombre"]
     password = datos["password"]
-    correo = datos["email"]
+    email = datos["email"]
     fecha = datos["fecha"]
 
     usuario = Usuario(**datos)
