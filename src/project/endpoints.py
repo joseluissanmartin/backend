@@ -16,7 +16,7 @@ def usuario_a_dict(usuario):#el diccionario
     return {
     "id": usuario.id,
     "nombre": usuario.nombre,
-    "correo": usuario.correo,
+    "email": usuario.email,
     "fecha": usuario.fecha,
     "sistema_o": usuario.sistema_o,
     "procesador": usuario.procesador,
@@ -60,10 +60,10 @@ def login():
 
     datos = request.get_json()
 
-    correo =datos["correo"]
+    correo =datos["email"]
     password = datos["password"]
 
-    usuario = Usuario.query.filter_by(correo = correo).first()
+    usuario = Usuario.query.filter_by(email = email).first()
 
     if usuario is None:
         return "Not found", 404
@@ -84,7 +84,7 @@ def register():
 
     nombre = datos["nombre"]
     password = datos["password"]
-    correo = datos["correo"]
+    correo = datos["email"]
     fecha = datos["fecha"]
 
     usuario = Usuario(**datos)
@@ -113,7 +113,7 @@ def view(id):
     respuesta.append({
                 "id": usuario.id,
                 "nombre": usuario.nombre,
-                "correo": usuario.correo,
+                "email": usuario.email,
                 "fecha": usuario.fecha
             })
     return jsonify(respuesta), 200

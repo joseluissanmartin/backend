@@ -5,7 +5,7 @@ class Usuario(db.Model):#el generador de tablas en el db
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     nombre = db.Column(db.String, nullable=True)
     password = db.Column(db.String, nullable=False)
-    correo =db.Column(db.String, nullable=False)
+    email =db.Column(db.String, nullable=False)
     fecha = db.Column(db.String, nullable=True)
     sistema_o = db.Column(db.String, nullable=True)
     procesador = db.Column(db.String, nullable=True)
