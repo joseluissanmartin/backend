@@ -51,16 +51,6 @@ def check_token():
     except:
         return False
 
-def autenticar(f):
-    @wraps(f)
-    def wrapper(*args, **kwargs):
-        check_response = check_token()
-        if check_response is False:
-            return 'Unauthorized', 401
-        return f(check_response, *args, **kwargs)
-    return wrapper
-
-
 #@blueprint.route("/inicio")#rutas
 def index():
     return "<h1>Hola</h1>"
@@ -76,7 +66,7 @@ def register():
     return usuario_schema.dump(usuario), 201
 
 
-@blueprint.route("/login<id>", methods=["GET"])
+@blueprint.route("/login/<id>", methods=["GET"])
 def view(id):
     check_response = check_token()
 
@@ -171,7 +161,6 @@ def login():
 
 
 @blueprint.route('/token', methods=['GET'])
-@autenticar
 def usuario(payload):
     usuario = Usuario.query.get_or_404(payload['sub'])
 
